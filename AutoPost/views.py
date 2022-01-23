@@ -1,21 +1,23 @@
 import tweepy
 
 from django.shortcuts import redirect, render
-from django.conf import settings
-
+from . import TweetBot
+from .forms import MessageForm
 # Create your views here.
 
 
 def index(request):
     if request.method == 'POST':
-        content = request.POST.get("content", '')
-        if content:
-            print("Content:", content)
-            auth = tweepy.OAuthHandler(
-                settings.API_KEY, settings.API_KEY_SECRET)
-            auth.set_access_token(settings.ACCESS_TOKEN,
-                                  settings.ACCESS_TOKEN_SECRET)
-            api = tweepy.API(auth)
-            api.update_status(content)
-            return redirect('index')
-    return render(request, 'AutoPost/index.html')
+        form = MessageForm(request.POST)
+        content = None
+        if form.is_valid():
+            print(request.POST)
+        # if content:
+        #     print("Content:", content)
+        #     bot = TweetBot.TwitterAPI()
+        #     bot.authenticate()
+        #     bot.tweet(content)
+        return redirect('index')
+    else:
+        form = MessageForm()
+        return render(request, 'AutoPost/index.html', {"form": form})
