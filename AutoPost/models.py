@@ -9,3 +9,4 @@ class Message(models.Model):
     date_published = models.DateField()
     time_published = models.TimeField()
     sent = models.BooleanField(default=False)
+    

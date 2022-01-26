@@ -1,0 +1,11 @@
+
+{% if messages %}
+    <ol>
+        {% for m in messages %}
+        <li>
+            {{m.message}} - {{m.date_published}} - {{m.time_published}}
+        </li>
+        {% endfor %}
+    </ol>
+{% endif %}
+    
