@@ -1,4 +1,4 @@
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, time
 from django.test import TestCase
 from django.urls import reverse
 from . import forms
@@ -36,36 +36,75 @@ class FormTest(TestCase):
         self.assertFalse(form.is_valid())
 
     def test_valid_form(self):
+        now = datetime.now().time()
         form = forms.MessageForm(data={
             "message": "asd ",
-            "date_published": "2020-10-4",
-            "time_published": "12:34"
+            "date_published": str(datetime.now().date()),
+            "time_published": str(time(now.hour, now.minute))
         })
         self.assertTrue(form.is_valid())
 
-    def test_hasDatePassed_yesterday(self):
-        yesterday = str(datetime.now().date()-timedelta(days=1))
-        self.assertTrue(views.hasDatePassed(yesterday))
+    def test_form_with_yesterday(self):
+        form = forms.MessageForm(data={
+            "message": "asd ",
+            "date_published": str(datetime.now().date()-timedelta(days=1)),
+            "time_published": "12:34"
+        })
+        self.assertTrue(form.hasDatePassed(
+            datetime.now().date()-timedelta(days=1)))
+        self.assertFalse(form.is_valid())
 
-    def test_hasDatePassed_today(self):
-        today = str(datetime.now().date())
-        self.assertFalse(views.hasDatePassed(today))
+    def test_form_with_today(self):
+        now = datetime.now().time()
+        form = forms.MessageForm(data={
+            "message": "asd ",
+            "date_published": str(datetime.now().date()),
+            "time_published": str(time(now.hour, min(59, now.minute+2)))
+        })
+        self.assertFalse(form.hasDatePassed(datetime.now().date()))
+        self.assertFalse(form.hasTimePassed(
+            time(now.hour, min(59, now.minute+2))))
+        self.assertTrue(form.is_valid())
 
-    def test_hasDatePassed_tomorrow(self):
-        tomorrow = str(datetime.now().date()+timedelta(days=1))
-        self.assertFalse(views.hasDatePassed(tomorrow))
+    def test_form_with_tomorrow(self):
+        now = datetime.now().time()
+        form = forms.MessageForm(data={
+            "message": "asd ",
+            "date_published": str(datetime.now().date()+timedelta(days=1)),
+            "time_published": str(time(now.hour, max(0, now.minute-2)))
+        })
+        self.assertFalse(form.hasDatePassed(
+            datetime.now().date()+timedelta(days=1)))
+        self.assertTrue(form.hasTimePassed(
+            time(max(0, now.hour-1), now.minute)))
+        self.assertTrue(form.is_valid())
 
-    def test_hasTimePassed_now(self):
-        currentTime = str(datetime.now().time().hour) + \
-            ":" + str(datetime.now().minute)
-        self.assertFalse(views.hasTimePassed(currentTime))
+    def test_form_with_earlier_time(self):
+        now = datetime.now().time()
+        form = forms.MessageForm(data={
+            "message": "asd ",
+            "date_published": str(datetime.now().date()),
+            "time_published": str(time(now.hour-1, now.minute-1))
+        })
+        self.assertTrue(form.hasTimePassed(time(now.hour-1, now.minute-1)))
+        self.assertFalse(form.is_valid())
 
-    def test_hasTimePassed_past(self):
-        past = str(datetime.now().time().hour-1) + \
-            ":" + str(datetime.now().minute)
-        self.assertTrue(views.hasTimePassed(past))
+    def test_form_with_future_time(self):
+        now = datetime.now().time()
+        form = forms.MessageForm(data={
+            "message": "asd ",
+            "date_published": str(datetime.now().date()),
+            "time_published": str(time(now.hour+1, now.minute))
+        })
+        self.assertFalse(form.hasTimePassed(time(now.hour+1, now.minute)))
+        self.assertTrue(form.is_valid())
 
-    def test_hasTimePassed_future(self):
-        future = str(datetime.now().time().hour+1) + \
-            ":" + str(datetime.now().minute)
-        self.assertFalse(views.hasTimePassed(future))
+    def test_form_with_current_time(self):
+        now = datetime.now().time()
+        form = forms.MessageForm(data={
+            "message": "asd ",
+            "date_published": str(datetime.now().date()),
+            "time_published": str(time(now.hour, now.minute))
+        })
+        self.assertFalse(form.hasTimePassed(time(now.hour, now.minute)))
+        self.assertTrue(form.is_valid())
