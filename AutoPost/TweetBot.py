@@ -16,8 +16,10 @@ class TwitterAPI:
         self.api = tweepy.API(auth)
         self.is_authenticated = True
 
-    def tweet(self, tweet):
+    def tweet(self, tweet, author):
         if self.is_authenticated:
-            self.api.update_status(tweet)
+            full_tweet = tweet + " -" + author
+            print(full_tweet)
+            self.api.update_status(full_tweet)
         else:
             print("Authenticate first")

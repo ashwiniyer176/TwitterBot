@@ -6,7 +6,7 @@ import datetime
 class MessageForm(ModelForm):
     class Meta:
         model = models.Message
-        fields = ['message', 'date_published', 'time_published']
+        fields = ['message', 'author', 'date_published', 'time_published']
         widgets = {
             'date_published': widgets.DateInput(attrs={'type': 'date'}),
             'time_published': widgets.DateInput(attrs={'type': 'time'})

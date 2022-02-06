@@ -1,11 +1,22 @@
-import datetime
-from email import message
-from django.http import HttpResponse
+import json
 from django.shortcuts import redirect, render
 from . import TweetBot
 from .forms import MessageForm
 from . import models
+import requests
 # Create your views here.
+
+
+def getNewQuotes():
+    url = "https://favqs.com/api/qotd"
+    response = requests.request(
+        "GET", url)
+    # new_mesage=models.Message()
+    quote_object = json.loads(response.text)
+    message = quote_object['quote']['body']
+    author = quote_object['quote']['author']
+    new_message = models.Message(message=message, author=author)
+    new_message.save()
 
 
 def index(request):
@@ -21,7 +32,12 @@ def index(request):
 
 
 def messages(request):
-    messages = models.Message.objects.all()
+    messages = models.Message.objects.filter(sent=False)
+    if len(messages) == 0:
+        print("No new messages")
+        # API Call to QuotesAPI
+        getNewQuotes()
+        return redirect('messages')
     return render(request, "AutoPost/messages.html", {"messages": messages})
 
 
@@ -30,5 +46,6 @@ def viewMessage(request, msg_id):
     msg = models.Message.objects.filter(id=msg_id)
     bot = TweetBot.TwitterAPI()
     bot.authenticate()
-    bot.tweet(msg[0].message)
+    bot.tweet(msg[0].message, msg[0].author)
+    msg[0].toggle_message_status()
     return redirect('messages')
