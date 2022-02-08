@@ -21,5 +21,6 @@ class TwitterAPI:
             full_tweet = tweet + " -" + author
             print(full_tweet)
             self.api.update_status(full_tweet)
+            return True
         else:
-            print("Authenticate first")
+            return self.is_authenticated

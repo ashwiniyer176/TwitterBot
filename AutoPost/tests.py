@@ -3,6 +3,7 @@ from django.test import TestCase
 from django.urls import reverse
 from . import forms
 from . import views
+from .twitter import TwitterAPI
 # Create your tests here.
 
 
@@ -25,3 +26,15 @@ class FormTest(TestCase):
             "author": "Xyz"
         })
         self.assertTrue(form.is_valid())
+
+
+class TwitterBotTest(TestCase):
+    def test_tweet_without_authenticate(self):
+        bot = TwitterAPI()
+        self.assertFalse(bot.tweet("test", "a1"))
+
+    def test_after_authenticate(self):
+        bot = TwitterAPI()
+        self.assertFalse(bot.is_authenticated)
+        bot.authenticate()
+        self.assertTrue(bot.is_authenticated)

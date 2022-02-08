@@ -1,7 +1,7 @@
 import json
 from django.http import HttpResponse
 from django.shortcuts import redirect, render
-from . import TweetBot
+from . import twitter
 from .forms import MessageForm
 from . import models
 import requests
@@ -51,7 +51,7 @@ def deleteMessage(request, msg_id):
 
 def sendMessage(request, msg_id):
     msg = models.Message.objects.filter(id=msg_id)
-    bot = TweetBot.TwitterAPI()
+    bot = twitter.TwitterAPI()
     bot.authenticate()
     bot.tweet(msg[0].message, msg[0].author)
     msg[0].toggle_message_status()
