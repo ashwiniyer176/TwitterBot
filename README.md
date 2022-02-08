@@ -8,7 +8,6 @@ The goal of the project is to build a bot that does all the hard work of maintai
 2. `python manage.py runserver`
 
 ## Tasks 
-1. Add auth and twitter connectivity
+1. Add auth
 2. Check if message already exists
-3. Write test cases for bot
-4. Improve UI
+3. Improve UI
