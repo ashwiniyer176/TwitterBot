@@ -1,4 +1,5 @@
 import json
+from django.http import HttpResponse
 from django.shortcuts import redirect, render
 from . import TweetBot
 from .forms import MessageForm
@@ -25,7 +26,9 @@ def index(request):
         print(type(form))
         if form.is_valid():
             new_message = form.save()
-        return redirect('messages')
+            return redirect('messages')
+        else:
+            return HttpResponse("error")
     else:
         form = MessageForm()
         return render(request, 'AutoPost/index.html', {"form": form})
@@ -41,8 +44,12 @@ def messages(request):
     return render(request, "AutoPost/messages.html", {"messages": messages})
 
 
-def viewMessage(request, msg_id):
-    print("Message ID:", msg_id)
+def deleteMessage(request, msg_id):
+    models.Message.objects.filter(id=msg_id).delete()
+    return redirect('messages')
+
+
+def sendMessage(request, msg_id):
     msg = models.Message.objects.filter(id=msg_id)
     bot = TweetBot.TwitterAPI()
     bot.authenticate()

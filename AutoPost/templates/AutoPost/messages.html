@@ -4,22 +4,20 @@
     <th>ID</th>
     <th>Message</th>
     <th>Author</th>
-    <th>Date of Publishing</th>
-    <th>Time of Publishing</th>
     <th>Sent</th>
+    <th>Delete</th>
   </tr>
   {% for msg in messages %}
   <tr>
     <td>{{msg.id}}</td>
     <td>{{msg.message}}</td>
     <td>{{msg.author}}</td>
-    <td>{{msg.date_published}}</td>
-    <td>{{msg.time_published}}</td>
     {% if not msg.sent %}
-    <td><a href="{% url 'viewmessage' msg.id %}">Send Message</a></td>
+    <td><a href="{% url 'viewmessage' msg.id %}">Send</a></td>
     {% else %}
     <td>None</td>
     {% endif %}
+    <td><a href="{% url 'deletemessage' msg.id %}">Delete</a></td>
   </tr>
   {% endfor %}
 </table>

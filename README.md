@@ -8,8 +8,7 @@ The goal of the project is to build a bot that does all the hard work of maintai
 2. `python manage.py runserver`
 
 ## Tasks 
-1. Create trigger for bot to post tweets
-2. Add quotes API script
-3. Check if message already exists
-4. Write test cases for bot
-5. Improve UI
+1. Add auth and twitter connectivity
+2. Check if message already exists
+3. Write test cases for bot
+4. Improve UI
