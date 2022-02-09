@@ -1,6 +1,7 @@
 import json
 from django.http import HttpResponse
 from django.shortcuts import redirect, render
+from django.contrib.auth.decorators import login_required
 from . import twitter
 from .forms import MessageForm
 from . import models
@@ -20,6 +21,7 @@ def getNewQuotes():
     new_message.save()
 
 
+@login_required
 def index(request):
     if request.method == 'POST':
         form = MessageForm(request.POST)
@@ -34,6 +36,7 @@ def index(request):
         return render(request, 'AutoPost/index.html', {"form": form})
 
 
+@login_required
 def messages(request):
     messages = models.Message.objects.filter(sent=False)
     if len(messages) == 0:
@@ -44,11 +47,13 @@ def messages(request):
     return render(request, "AutoPost/messages.html", {"messages": messages})
 
 
+@login_required
 def deleteMessage(request, msg_id):
     models.Message.objects.filter(id=msg_id).delete()
     return redirect('messages')
 
 
+@login_required
 def sendMessage(request, msg_id):
     msg = models.Message.objects.filter(id=msg_id)
     bot = twitter.TwitterAPI()

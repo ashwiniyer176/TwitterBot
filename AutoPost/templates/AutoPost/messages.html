@@ -22,3 +22,13 @@
   {% endfor %}
 </table>
 {% endif %}
+<br />
+{% if user.is_authenticated %}
+<h2>Hi {{ user.username }}!</h2>
+<p><a href="{% url 'logout' %}">Log Out</a></p>
+{% else %}
+<p>You are not logged in</p>
+<a href="{% url 'login' %}">Log In</a> |
+<a href="{% url 'signup' %}">Sign Up</a>
+{% endif %}
+<h3><a href="{% url 'index' %}">New Message</a></h3>

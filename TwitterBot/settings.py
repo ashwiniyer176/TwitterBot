@@ -52,8 +52,12 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'AutoPost',
     'coverage',
-    'authentication',
+    'accounts',
 ]
+
+AUTH_USER_MODEL = "accounts.CustomUser"
+LOGIN_REDIRECT_URL = 'messages'
+LOGOUT_REDIRECT_URL = 'messages'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -96,7 +100,7 @@ DATABASES = {
     }
 }
 
-AUTH_USER_MODEL = "authentication.User"
+# AUTH_USER_MODEL = "authentication.User"
 # Password validation
 # https://docs.djangoproject.com/en/4.0/ref/settings/#auth-password-validators
 
