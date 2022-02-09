@@ -8,6 +8,5 @@ The goal of the project is to build a bot that does all the hard work of maintai
 2. `python manage.py runserver`
 
 ## Tasks 
-1. Add auth
-2. Check if message already exists
-3. Improve UI
+1. Check if message already exists
+2. Improve UI
