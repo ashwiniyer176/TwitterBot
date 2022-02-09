@@ -10,3 +10,4 @@ The goal of the project is to build a bot that does all the hard work of maintai
 ## Tasks 
 1. Check if message already exists
 2. Improve UI
+3. Configure envs for Production and Development
